@@ -1,6 +1,5 @@
 import { Link, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
-import { supabase } from "../business-logic/SupabaseClient";
 import URLService from "../business-logic/URLService";
 
 export default function Home() {
@@ -26,9 +25,7 @@ export default function Home() {
         status_code: result.status,
         is_accessible: result.ok,
       };
-      const { data, error } = await supabase.from("scan").insert([scan]);
-
-      if (error) throw error;
+      // TODO: Integrate API call
 
       setSuccess(true);
       setMessage(

@@ -26,8 +26,6 @@ class URLService {
         mode: "no-cors",
       });
 
-      console.log("res", response);
-
       return {
         status: response.status,
         ok: response.ok,
