@@ -1,15 +1,8 @@
-import { useState } from "react";
 import "./App.css";
-import Home from "./ui/Home";
+import Navigation from "./ui/navigation/Navigation";
 
 function App() {
-  const [count, setCount] = useState<number>(0);
-
-  return (
-    <>
-      <Home />
-    </>
-  );
+  return <Navigation />;
 }
 
 export default App;
