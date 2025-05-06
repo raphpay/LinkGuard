@@ -1,4 +1,7 @@
 import { useState } from "react";
+
+import AuthenticationService from "../../../business-logic/services/AuthenticationService";
+
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
 
@@ -6,8 +9,13 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  function login() {
-    console.log("login");
+  async function login() {
+    try {
+      await AuthenticationService.getInstance().login(email, password);
+      // TODO: Handle navigation to dashboard
+    } catch (error) {
+      console.log("error logging in");
+    }
   }
 
   return (
@@ -23,6 +31,7 @@ export default function Login() {
               type="email"
               placeholder="Email"
               value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             />

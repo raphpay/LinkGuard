@@ -1,4 +1,4 @@
-import CacheKeys from "../models/enums/CacheKeys";
+import CacheKeys from "../enums/CacheKeys";
 import IToken from "../models/IToken";
 import APIService from "./APIService";
 import CacheService from "./CacheService";
