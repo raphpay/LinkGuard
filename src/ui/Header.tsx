@@ -6,19 +6,27 @@ export default function Header() {
           <span className="text-xl font-bold text-blue-600">🛡️ LinkGuard</span>
         </div>
         <nav>
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-2 sm:gap-4">
             <a
-              href="/auth/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-              Connexion
-            </a>
-            <a
-              href="/auth/signup"
+              href="/pricing"
               className="text-blue-600 font-medium hover:underline flex items-center"
             >
-              Inscription
+              Tarifs
             </a>
+            <div className="flex flex-row sm:flex-row items-center gap-2 sm:gap-4">
+              <a
+                href="/auth/login"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+              >
+                Connexion
+              </a>
+              <a
+                href="/auth/signup"
+                className="text-blue-600 font-medium hover:underline flex items-center"
+              >
+                Inscription
+              </a>
+            </div>
           </div>
         </nav>
       </div>
