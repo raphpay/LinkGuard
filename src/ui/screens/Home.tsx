@@ -1,7 +1,7 @@
 import { Link, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
-import URLService from "../business-logic/URLService";
-import Header from "./Header";
+import URLService from "../../business-logic/URLService";
+import Header from "../components/Header";
 
 export default function Home() {
   const [url, setUrl] = useState<string>("");

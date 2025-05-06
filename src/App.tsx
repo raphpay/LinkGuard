@@ -1,8 +1,8 @@
 import "./App.css";
-import Home from "./ui/Home";
+import Navigation from "./ui/navigation/Navigation";
 
 function App() {
-  return <Home />;
+  return <Navigation />;
 }
 
 export default App;
