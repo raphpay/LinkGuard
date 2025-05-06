@@ -1,9 +1,12 @@
 import { useState } from "react";
 
+import UserService from "../../../business-logic/services/UserService";
+
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
 
 export default function SignUp() {
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
 
@@ -30,8 +33,18 @@ export default function SignUp() {
       : undefined;
   }
 
-  function signUp() {
-    console.log("signup");
+  async function signUp() {
+    if (password === passwordConfirmation) {
+      try {
+        await UserService.getInstance().register(email, password);
+        setEmail("");
+        setPassword("");
+        setPasswordConfirmation("");
+        // TODO: Navigate to dashboard and save token
+      } catch (error) {
+        console.log("error signing up");
+      }
+    }
   }
 
   return (
@@ -46,6 +59,8 @@ export default function SignUp() {
             <input
               type="email"
               placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             />
