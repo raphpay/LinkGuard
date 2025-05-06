@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 
-// Root
 import NavigationRoutes from "../../business-logic/navigation/NavigationRoutes";
+
+import Login from "../screens/auth/Login";
+import SignUp from "../screens/auth/SignUp";
 import Home from "../screens/Home";
-import Login from "../screens/Login";
 import Pricing from "../screens/Pricing";
+
 // Dashboard
 
 const Navigation: React.FC = () => {
@@ -14,8 +16,9 @@ const Navigation: React.FC = () => {
       {/* ROOT */}
       <Route path={NavigationRoutes.ROOT}>
         <Route index element={<Home />} />
-        <Route path={NavigationRoutes.LOGIN} element={<Login />} />
         <Route path={NavigationRoutes.PRICING} element={<Pricing />} />
+        <Route path={NavigationRoutes.LOGIN} element={<Login />} />
+        <Route path={NavigationRoutes.SIGNUP} element={<SignUp />} />
       </Route>
     </Routes>
   );

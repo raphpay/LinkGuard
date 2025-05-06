@@ -3,7 +3,8 @@ const NavigationRoutes = {
   // Authentication
   ROOT: "/",
   PRICING: "/pricing",
-  LOGIN: "/authentication/login",
+  LOGIN: "/auth/login",
+  SIGNUP: "/auth/signUp",
 };
 
 export default NavigationRoutes;
