@@ -1,15 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { removeToken } from "../../business-logic/redux/slices/tokenReducer";
 import { removeCurrentUser } from "../../business-logic/redux/slices/userReducer";
 import CacheService from "../../business-logic/services/CacheService";
 
-interface HeaderProps {
-  isLoggedIn?: boolean;
-}
-
-export default function Header({ isLoggedIn = false }) {
+export default function Header() {
+  const { token } = useSelector((state: any) => state.tokens);
   const dispatch = useDispatch();
 
   function logout() {
@@ -28,14 +25,16 @@ export default function Header({ isLoggedIn = false }) {
         </div>
         <nav>
           <div className="flex flex-col md:flex-row items-center gap-2 sm:gap-4">
-            <Link
-              to="/pricing"
-              className="text-blue-600 font-medium hover:underline flex items-center"
-            >
-              Tarifs
-            </Link>
+            {!token && (
+              <Link
+                to="/pricing"
+                className="text-blue-600 font-medium hover:underline flex items-center"
+              >
+                Tarifs
+              </Link>
+            )}
             <div>
-              {isLoggedIn ? (
+              {token ? (
                 <button
                   onClick={logout}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"

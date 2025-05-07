@@ -22,13 +22,17 @@ class UserService {
     return UserService.instance;
   }
 
-  async register(email: string, password: string): Promise<IToken> {
+  async register(
+    email: string,
+    password: string,
+    planID: string
+  ): Promise<IToken> {
     try {
       const user: IUserInput = {
         email,
         password,
         subscriptionStatus: SubscriptionStatus.free,
-        subscriptionPlanID: "5DF4F8CE-147A-4928-9F6A-CA3A5191D1D4", // TODO: Change with real data
+        subscriptionPlanID: planID,
         role: Role.user,
       };
       const encodedAuth = btoa(`${email}:${password}`); // Use btoa()
