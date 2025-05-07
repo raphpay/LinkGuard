@@ -1,4 +1,4 @@
-import IScan, { IScanInput } from "../models/IScan";
+import IScan, { IScanInput, IScanInputWithoutAccount } from "../models/IScan";
 import IToken from "../models/IToken";
 import APIService from "./APIService";
 
@@ -24,6 +24,17 @@ class ScanService {
   async scan(input: IScanInput, token: IToken): Promise<IScan> {
     try {
       return await APIService.post<IScan>(this.baseRoute, input, token.value);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async scanWithoutAccount(input: IScanInputWithoutAccount): Promise<IScan> {
+    try {
+      return await APIService.post<IScan>(
+        `${this.baseRoute}/scan-without-account`,
+        input
+      );
     } catch (error) {
       throw error;
     }
