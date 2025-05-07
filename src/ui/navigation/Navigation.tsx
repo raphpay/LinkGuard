@@ -1,15 +1,21 @@
+import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import NavigationRoutes from "../../business-logic/navigation/NavigationRoutes";
 
-import Login from "../screens/auth/Login";
-import SignUp from "../screens/auth/SignUp";
+import ProtectedRoute from "./ProtectedRoute";
+
+// Root
 import Home from "../screens/Home";
 import Pricing from "../screens/Pricing";
-
+// Auth
+import Login from "../screens/auth/Login";
+import SignUp from "../screens/auth/SignUp";
 // Dashboard
+import Dashboard from "../screens/dashboard/Dashboard";
 
 const Navigation: React.FC = () => {
+  const { token } = useSelector((state: any) => state.tokens);
   // Component
   return (
     <Routes>
@@ -19,6 +25,13 @@ const Navigation: React.FC = () => {
         <Route path={NavigationRoutes.PRICING} element={<Pricing />} />
         <Route path={NavigationRoutes.LOGIN} element={<Login />} />
         <Route path={NavigationRoutes.SIGNUP} element={<SignUp />} />
+      </Route>
+      {/* DASHBOARD */}
+      <Route
+        path={NavigationRoutes.DASHBOARD}
+        element={<ProtectedRoute token={token} />}
+      >
+        <Route index element={<Dashboard />} />
       </Route>
     </Routes>
   );
