@@ -2,7 +2,7 @@ import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
 import IScan from "../models/IScan";
 import IToken from "../models/IToken";
-import IUser, { IUserInput } from "../models/IUser";
+import IUser, { IUserInput, IUserUpdateInput } from "../models/IUser";
 import APIService from "./APIService";
 
 /**
@@ -73,6 +73,20 @@ class UserService {
     } catch (error) {
       throw error;
     }
+  }
+
+  // PUT
+  async changePlan(
+    userID: string,
+    planID: string,
+    token: IToken
+  ): Promise<void> {
+    try {
+      let input: IUserUpdateInput = {
+        subscriptionPlanID: planID,
+      };
+      await APIService.put(`${this.baseRoute}/${userID}`, input, token.value);
+    } catch (error) {}
   }
 }
 

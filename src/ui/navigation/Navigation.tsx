@@ -13,6 +13,7 @@ import Login from "../screens/auth/Login";
 import SignUp from "../screens/auth/SignUp";
 // Dashboard
 import Account from "../screens/dashboard/Account";
+import AuthPricing from "../screens/dashboard/AuthPricing";
 import Dashboard from "../screens/dashboard/Dashboard";
 
 const Navigation: React.FC = () => {
@@ -39,6 +40,12 @@ const Navigation: React.FC = () => {
         element={<ProtectedRoute token={token} />}
       >
         <Route index element={<Account />} />
+      </Route>
+      <Route
+        path={NavigationRoutes.AUTH_PRICING}
+        element={<ProtectedRoute token={token} />}
+      >
+        <Route index element={<AuthPricing />} />
       </Route>
     </Routes>
   );

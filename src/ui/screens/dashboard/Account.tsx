@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import ISubscriptionPlan from "../../../business-logic/models/ISubscriptionPlan";
 import IUser from "../../../business-logic/models/IUser";
+import NavigationRoutes from "../../../business-logic/navigation/NavigationRoutes";
 import SubscriptionPlanService from "../../../business-logic/services/SubscriptionPlanService";
 import UserService from "../../../business-logic/services/UserService";
 import { capitalizeFirstLetter } from "../../../business-logic/utils/string.utils";
@@ -13,6 +15,14 @@ export default function Account() {
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [plan, setPlan] = useState<ISubscriptionPlan | null>(null);
 
+  const navigate = useNavigate();
+
+  // Sync methods
+  function redirectToPricing() {
+    navigate(NavigationRoutes.AUTH_PRICING);
+  }
+
+  // Lifecycle
   useEffect(() => {
     async function fetchData() {
       const userData = await UserService.getInstance().getUser(
@@ -69,12 +79,12 @@ export default function Account() {
         <section className="space-y-4 border rounded-md p-6 shadow-sm bg-white">
           <h2 className="text-xl font-semibold">Accès &amp; Actions</h2>
           <div className="flex sm:flex-col flex-row sm:space-x-4  space-y-4 sm:space-y-0">
-            <a
-              href="/pricing"
+            <button
+              onClick={redirectToPricing}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center w-50 sm:mb-2"
             >
               Changer de plan
-            </a>
+            </button>
             <button
               className="text-red-600 hover:underline text-center w-50 sm:mt-2"
               onClick={() => {
