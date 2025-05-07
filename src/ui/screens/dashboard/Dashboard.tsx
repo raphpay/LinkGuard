@@ -14,6 +14,10 @@ export default function Dashboard() {
   const [urlToScan, setUrlToScan] = useState("");
   const [urlError, setUrlError] = useState<string | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(15);
+  const [filter, setFilter] = useState("");
+
   const { token } = useSelector((state: any) => state.tokens);
 
   async function getScans() {
@@ -22,7 +26,12 @@ export default function Dashboard() {
         token.user.id,
         token
       );
-      setScans(apiScans);
+      const filtered = apiScans.filter((scan) =>
+        scan.input.toLowerCase().includes(filter.toLowerCase())
+      );
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginated = filtered.slice(start, start + itemsPerPage);
+      setScans(paginated);
     } catch (error) {
       console.log("error fetching scans");
     }
@@ -44,11 +53,8 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    async function init() {
-      getScans();
-    }
-    init();
-  }, []);
+    getScans();
+  }, [filter, currentPage]);
 
   return (
     <>
@@ -63,6 +69,18 @@ export default function Dashboard() {
             >
               Faire un scan
             </button>
+          </div>
+          <div className="flex justify-between items-center mb-4">
+            <input
+              type="text"
+              placeholder="Filtrer par URL"
+              value={filter}
+              onChange={(e) => {
+                setFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border px-2 py-1 rounded"
+            />
           </div>
           <table className="w-full border shadow-sm">
             <thead>
@@ -92,6 +110,21 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
+          <div className="space-x-2 mt-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-2 py-1 border rounded disabled:opacity-50"
+            >
+              Précédent
+            </button>
+            <button
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="px-2 py-1 border rounded"
+            >
+              Suivant
+            </button>
+          </div>
         </div>
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500/75 transition-opacity">
