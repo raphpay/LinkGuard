@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [scans, setScans] = useState<IScan[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [urlToScan, setUrlToScan] = useState("");
+  const [urlError, setUrlError] = useState<string | null>(null);
 
   const { token } = useSelector((state: any) => state.tokens);
 
@@ -22,6 +23,15 @@ export default function Dashboard() {
       setScans(apiScans);
     } catch (error) {
       console.log("error fetching scans");
+    }
+  }
+
+  function isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   }
 
@@ -76,16 +86,25 @@ export default function Dashboard() {
           </table>
         </div>
         {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500/75 transition-opacity">
             <div className="bg-white p-6 rounded shadow-md w-96">
               <h2 className="text-xl font-semibold mb-4">Nouveau scan</h2>
-              <input
-                type="text"
-                placeholder="Entrez une URL"
-                value={urlToScan}
-                onChange={(e) => setUrlToScan(e.target.value)}
-                className="w-full border p-2 mb-4 rounded"
-              />
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Entrez une URL"
+                  value={urlToScan}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    setUrlToScan(inputValue);
+                    setUrlError(isValidUrl(inputValue) ? null : "URL invalide");
+                  }}
+                  className="w-full border p-2 rounded"
+                />
+                {urlError && (
+                  <p className="text-sm text-red-600 mt-1">{urlError}</p>
+                )}
+              </div>
               <div className="flex justify-end space-x-2">
                 <button
                   className="bg-gray-300 text-black px-4 py-2 rounded"
@@ -94,8 +113,9 @@ export default function Dashboard() {
                   Annuler
                 </button>
                 <button
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
                   onClick={handleScan}
+                  disabled={!!urlError}
                 >
                   Scanner
                 </button>
