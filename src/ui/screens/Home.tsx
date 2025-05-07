@@ -2,6 +2,7 @@ import { Link, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import URLService from "../../business-logic/URLService";
 import Header from "../components/Header";
+import URLInput from "../components/URLInput";
 
 export default function Home() {
   const [url, setUrl] = useState<string>("");
@@ -63,14 +64,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-2">
               <Link className="text-blue-500" size={18} />
-              <input
-                type="url"
-                placeholder="https://votre-site.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                required
-              />
+              <URLInput value={url} setValue={setUrl} />
             </div>
             <div className="flex items-center gap-2">
               <Mail className="text-blue-500" size={18} />

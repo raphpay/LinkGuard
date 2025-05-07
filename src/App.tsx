@@ -17,8 +17,6 @@ function App() {
   // Async Methods
   async function dispatchValues() {
     try {
-      // const user = await UserServiceGet.getUserByID(token.user.id, token);
-      // dispatch(setCurrentUser(user));
       dispatch(setToken(token));
       CacheService.getInstance().storeValue(CacheKeys.currentUserToken, token);
     } catch (error) {}
