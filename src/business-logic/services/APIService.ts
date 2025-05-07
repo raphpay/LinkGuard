@@ -61,7 +61,8 @@ class APIService {
   static async post<T>(
     endpoint: string,
     data: any = {},
-    token?: string
+    token?: string,
+    basicAuth?: string
   ): Promise<T> {
     try {
       const url = `${API_BASE_URL}/${endpoint}`;
@@ -72,6 +73,10 @@ class APIService {
       // Include token in headers if provided
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      if (basicAuth) {
+        headers["Authorization"] = basicAuth;
       }
 
       const response = await fetch(url, {

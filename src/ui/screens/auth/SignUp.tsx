@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import UserService from "../../../business-logic/services/UserService";
 
+import { setToken } from "../../../business-logic/redux/slices/tokenReducer";
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
 
@@ -9,6 +11,8 @@ export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
+
+  const dispatch = useDispatch();
 
   function getPasswordStrength(): string {
     if (password.length < 6) return "Trop court";
@@ -36,11 +40,11 @@ export default function SignUp() {
   async function signUp() {
     if (password === passwordConfirmation) {
       try {
-        await UserService.getInstance().register(email, password);
+        const token = await UserService.getInstance().register(email, password);
         setEmail("");
         setPassword("");
         setPasswordConfirmation("");
-        // TODO: Navigate to dashboard and save token
+        dispatch(setToken(token));
       } catch (error) {
         console.log("error signing up");
       }

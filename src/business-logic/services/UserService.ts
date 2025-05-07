@@ -1,6 +1,7 @@
 import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
-import IUser, { IUserInput } from "../models/IUser";
+import IToken from "../models/IToken";
+import { IUserInput } from "../models/IUser";
 import APIService from "./APIService";
 
 /**
@@ -21,7 +22,7 @@ class UserService {
     return UserService.instance;
   }
 
-  async register(email: string, password: string): Promise<IUser> {
+  async register(email: string, password: string): Promise<IToken> {
     try {
       const user: IUserInput = {
         email,
@@ -30,12 +31,16 @@ class UserService {
         subscriptionPlanID: "5DF4F8CE-147A-4928-9F6A-CA3A5191D1D4", // TODO: Change with real data
         role: Role.user,
       };
+      const encodedAuth = btoa(`${email}:${password}`); // Use btoa()
+      const basicAuth = `Basic ${encodedAuth}`;
 
-      const createdUser = await APIService.post<IUser>(
+      const token = await APIService.post<IToken>(
         `${this.baseRoute}/register`,
-        user
+        user,
+        undefined,
+        basicAuth
       );
-      return createdUser;
+      return token;
 
       // token = await APIService.post<IUser>(
       //   `${this.baseRoute}/register`, user

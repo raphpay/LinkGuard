@@ -20,24 +20,21 @@ function App() {
       // const user = await UserServiceGet.getUserByID(token.user.id, token);
       // dispatch(setCurrentUser(user));
       dispatch(setToken(token));
+      CacheService.getInstance().storeValue(CacheKeys.currentUserToken, token);
     } catch (error) {}
   }
 
   // Lifecycle
   useEffect(() => {
-    console.log("token", token);
     async function init() {
       // Code
       if (token) {
-        console.log("if");
         navigate(NavigationRoutes.DASHBOARD);
         await dispatchValues();
       } else {
-        console.log("else");
         const cachedToken = CacheService.getInstance().retrieveValue(
           CacheKeys.currentUserToken
         ) as IToken;
-        console.log("cachedtoken", cachedToken);
         if (cachedToken) dispatch(setToken(cachedToken));
       }
     }
