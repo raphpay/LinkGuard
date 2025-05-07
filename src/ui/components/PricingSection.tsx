@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 
 import Screen from "../../business-logic/enums/Screen";
 import ISubscriptionPlan, {
   Name,
 } from "../../business-logic/models/ISubscriptionPlan";
+import NavigationRoutes from "../../business-logic/navigation/NavigationRoutes";
+import { setSelectedSubscriptionPlan } from "../../business-logic/redux/slices/subscriptionPlanReducer";
 import SubscriptionPlanService from "../../business-logic/services/SubscriptionPlanService";
 import { capitalizeFirstLetter } from "../../business-logic/utils/string.utils";
 
@@ -11,16 +15,26 @@ interface PricingSectionProps {
   screen: Screen;
 }
 
-export default function PricinSection() {
+export default function PricinSection({ screen }: PricingSectionProps) {
   const [plans, setPlans] = useState<ISubscriptionPlan[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<ISubscriptionPlan | null>(
     null
   );
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   function choosePlan(plan: ISubscriptionPlan) {
-    // TODO: Redirect based on screen props
+    switch (screen) {
+      case Screen.pricing:
+        navigate(NavigationRoutes.LOGIN);
+        break;
+      case Screen.signup:
+        dispatch(setSelectedSubscriptionPlan(plan));
+      default:
+        break;
+    }
     setSelectedPlan(plan);
-    console.log("plan", plan);
   }
 
   async function loadPlans() {

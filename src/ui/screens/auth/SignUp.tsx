@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import UserService from "../../../business-logic/services/UserService";
 
+import Screen from "../../../business-logic/enums/Screen";
 import { setToken } from "../../../business-logic/redux/slices/tokenReducer";
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
+import PricinSection from "../../components/PricingSection";
 
 export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
 
+  const { selectedPlan } = useSelector((state: any) => state.subscriptionPlans);
   const dispatch = useDispatch();
 
   function getPasswordStrength(): string {
@@ -38,16 +41,24 @@ export default function SignUp() {
   }
 
   async function signUp() {
-    if (password === passwordConfirmation) {
-      try {
-        const token = await UserService.getInstance().register(email, password);
-        setEmail("");
-        setPassword("");
-        setPasswordConfirmation("");
-        dispatch(setToken(token));
-      } catch (error) {
-        console.log("error signing up");
+    if (selectedPlan) {
+      if (password === passwordConfirmation) {
+        try {
+          const token = await UserService.getInstance().register(
+            email,
+            password,
+            selectedPlan.id
+          );
+          setEmail("");
+          setPassword("");
+          setPasswordConfirmation("");
+          dispatch(setToken(token));
+        } catch (error) {
+          console.log("error signing up");
+        }
       }
+    } else {
+      console.log("Please select a plan before");
     }
   }
 
@@ -89,7 +100,7 @@ export default function SignUp() {
             </button>
           </form>
         </div>
-        <div className="mt-4 text-center">
+        <div className="mt-4 mb-4 text-center">
           <p className="text-gray-600 text-sm">
             Vous avez déjà un compte ?{" "}
             <a
@@ -100,6 +111,7 @@ export default function SignUp() {
             </a>
           </p>
         </div>
+        <PricinSection screen={Screen.signup} />
       </main>
     </>
   );
