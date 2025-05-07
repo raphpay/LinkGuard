@@ -1,5 +1,6 @@
 import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
+import IScan from "../models/IScan";
 import IToken from "../models/IToken";
 import { IUserInput } from "../models/IUser";
 import APIService from "./APIService";
@@ -22,6 +23,7 @@ class UserService {
     return UserService.instance;
   }
 
+  // POST
   async register(
     email: string,
     password: string,
@@ -45,20 +47,19 @@ class UserService {
         basicAuth
       );
       return token;
-
-      // token = await APIService.post<IUser>(
-      //   `${this.baseRoute}/register`, user
-      // );
-      // CacheService.getInstance().storeValue<string>(
-      //   CacheKeys.currentUserID,
-      //   token.user.id
-      // );
-      // CacheService.getInstance().storeValue<IToken>(
-      //   CacheKeys.currentUserToken,
-      //   token
-      // );
-      // return token;
     } catch (error: any) {
+      throw error;
+    }
+  }
+
+  // GET
+  async getScans(userID: string, token: IToken): Promise<IScan[]> {
+    try {
+      return await APIService.get<IScan[]>(
+        `${this.baseRoute}/scans/${userID}`,
+        token.value
+      );
+    } catch (error) {
       throw error;
     }
   }
