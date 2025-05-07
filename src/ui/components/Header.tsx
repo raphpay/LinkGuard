@@ -25,7 +25,14 @@ export default function Header() {
         </div>
         <nav>
           <div className="flex flex-col md:flex-row items-center gap-2 sm:gap-4">
-            {!token && (
+            {token ? (
+              <Link
+                to="/dashboard/account"
+                className="text-blue-600 font-medium hover:underline flex items-center"
+              >
+                Compte
+              </Link>
+            ) : (
               <Link
                 to="/pricing"
                 className="text-blue-600 font-medium hover:underline flex items-center"

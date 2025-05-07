@@ -16,3 +16,10 @@ export interface IUserInput {
   subscriptionPlanID: string;
   role: Role;
 }
+
+export interface IUserUpdateInput {
+  email?: string;
+  password?: string;
+  subscriptionStatus?: SubscriptionStatus;
+  subscriptionPlanID?: string;
+}

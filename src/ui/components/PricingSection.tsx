@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 import Screen from "../../business-logic/enums/Screen";
@@ -9,6 +9,7 @@ import ISubscriptionPlan, {
 import NavigationRoutes from "../../business-logic/navigation/NavigationRoutes";
 import { setSelectedSubscriptionPlan } from "../../business-logic/redux/slices/subscriptionPlanReducer";
 import SubscriptionPlanService from "../../business-logic/services/SubscriptionPlanService";
+import UserService from "../../business-logic/services/UserService";
 import { capitalizeFirstLetter } from "../../business-logic/utils/string.utils";
 
 interface PricingSectionProps {
@@ -21,16 +22,20 @@ export default function PricinSection({ screen }: PricingSectionProps) {
     null
   );
 
+  const { token } = useSelector((state: any) => state.tokens);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  function choosePlan(plan: ISubscriptionPlan) {
+  // Async Methods
+  async function choosePlan(plan: ISubscriptionPlan) {
     switch (screen) {
       case Screen.pricing:
         navigate(NavigationRoutes.LOGIN);
         break;
       case Screen.signup:
         dispatch(setSelectedSubscriptionPlan(plan));
+      case Screen.dashboard:
+        await selectPlanForUser(plan);
       default:
         break;
     }
@@ -46,13 +51,48 @@ export default function PricinSection({ screen }: PricingSectionProps) {
     }
   }
 
+  async function loadCurrentPlan() {
+    if (screen === Screen.dashboard) {
+      try {
+        const currentUser = await UserService.getInstance().getUser(
+          token.user.id,
+          token
+        );
+        const plansData = await SubscriptionPlanService.getInstance().getAll();
+        const userSelectedPlan = plansData.filter(
+          (plan) => plan.id === currentUser.subscriptionPlanID
+        );
+        setSelectedPlan(userSelectedPlan[0]);
+      } catch (error) {
+        console.log("error");
+      }
+    }
+  }
+
+  async function selectPlanForUser(plan: ISubscriptionPlan) {
+    try {
+      if (plan.id) {
+        await UserService.getInstance().changePlan(
+          token.user.id,
+          plan.id,
+          token
+        );
+      }
+    } catch (error) {
+      console.log("Error updating plan");
+    }
+  }
+
+  // Lifecycle
   useEffect(() => {
     async function init() {
       loadPlans();
+      loadCurrentPlan();
     }
     init();
   }, []);
 
+  // Render
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -95,7 +135,9 @@ export default function PricinSection({ screen }: PricingSectionProps) {
               onClick={() => choosePlan(plan)}
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Choisir ce plan
+              {selectedPlan?.name === plan.name
+                ? "Plan selectionné"
+                : "Choisir ce plan"}
             </button>
           </div>
         ))}

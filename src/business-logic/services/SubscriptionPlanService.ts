@@ -19,6 +19,7 @@ class SubscriptionPlanService {
     return SubscriptionPlanService.instance;
   }
 
+  // GET
   async getAll(): Promise<ISubscriptionPlan[]> {
     try {
       return await APIService.get<ISubscriptionPlan[]>(this.baseRoute);
