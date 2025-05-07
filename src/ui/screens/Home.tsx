@@ -1,6 +1,7 @@
 import { Link, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
-import URLService from "../../business-logic/URLService";
+import { IScanInputWithoutAccount } from "../../business-logic/models/IScan";
+import ScanService from "../../business-logic/services/ScanService";
 import Header from "../components/Header";
 import URLInput from "../components/URLInput";
 
@@ -18,27 +19,31 @@ export default function Home() {
     setMessage("");
 
     try {
-      // 👇 Scanner l'URL avant de l'enregistrerg
-      const result = await URLService.getInstance().scanUrlStatus(url);
-
-      const scan = {
-        url,
+      const input: IScanInputWithoutAccount = {
+        input: url,
         email,
-        status_code: result.status,
-        is_accessible: result.ok,
       };
-      // TODO: Integrate API call
+      console.log("1", input);
+      const scan = await ScanService.getInstance().scanWithoutAccount(input);
+      console.log("2", scan);
 
       setSuccess(true);
       setMessage(
-        result.ok
+        scan.linkResult.isAccessible
           ? "URL scannée avec succès ! Elle est accessible."
           : "URL enregistrée, mais inaccessible."
       );
     } catch (err) {
       console.error(err);
       setSuccess(false);
-      setMessage("Erreur lors du scan de l'URL.");
+      const error = (err as Error).message;
+      if (error == "forbidden.quotaReached") {
+        setMessage(
+          "Vous ne pouvez scanner qu'une URL. Connectez vous pour en scanner plus"
+        );
+      } else {
+        setMessage("Erreur lors du scan de l'URL.");
+      }
     } finally {
       setLoading(false);
     }
