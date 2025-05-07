@@ -7,6 +7,7 @@ const NavigationRoutes = {
   SIGNUP: "/auth/signUp",
   // Dashboard
   DASHBOARD: "/dashboard",
+  ACCOUNT: "/dashboard/account",
 };
 
 export default NavigationRoutes;

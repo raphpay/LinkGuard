@@ -2,7 +2,7 @@ import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
 import IScan from "../models/IScan";
 import IToken from "../models/IToken";
-import { IUserInput } from "../models/IUser";
+import IUser, { IUserInput } from "../models/IUser";
 import APIService from "./APIService";
 
 /**
@@ -53,6 +53,17 @@ class UserService {
   }
 
   // GET
+  async getUser(userID: string, token: IToken): Promise<IUser> {
+    try {
+      return await APIService.get<IUser>(
+        `${this.baseRoute}/${userID}`,
+        token.value
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getScans(userID: string, token: IToken): Promise<IScan[]> {
     try {
       return await APIService.get<IScan[]>(
