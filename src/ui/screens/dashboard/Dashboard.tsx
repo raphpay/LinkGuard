@@ -5,6 +5,7 @@ import IScan from "../../../business-logic/models/IScan";
 import UserService from "../../../business-logic/services/UserService";
 
 import Header from "../../components/Header";
+import URLInput from "../../components/URLInput";
 
 export default function Dashboard() {
   const [scans, setScans] = useState<IScan[]>([]);
@@ -23,15 +24,6 @@ export default function Dashboard() {
       setScans(apiScans);
     } catch (error) {
       console.log("error fetching scans");
-    }
-  }
-
-  function isValidUrl(url: string): boolean {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
     }
   }
 
@@ -89,22 +81,7 @@ export default function Dashboard() {
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500/75 transition-opacity">
             <div className="bg-white p-6 rounded shadow-md w-96">
               <h2 className="text-xl font-semibold mb-4">Nouveau scan</h2>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Entrez une URL"
-                  value={urlToScan}
-                  onChange={(e) => {
-                    const inputValue = e.target.value;
-                    setUrlToScan(inputValue);
-                    setUrlError(isValidUrl(inputValue) ? null : "URL invalide");
-                  }}
-                  className="w-full border p-2 rounded"
-                />
-                {urlError && (
-                  <p className="text-sm text-red-600 mt-1">{urlError}</p>
-                )}
-              </div>
+              <URLInput value={urlToScan} setValue={setUrlToScan} />
               <div className="flex justify-end space-x-2">
                 <button
                   className="bg-gray-300 text-black px-4 py-2 rounded"
