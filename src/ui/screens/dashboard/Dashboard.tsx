@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import IScan from "../../../business-logic/models/IScan";
+import IScan, { IScanInput } from "../../../business-logic/models/IScan";
+import ScanService from "../../../business-logic/services/ScanService";
 import UserService from "../../../business-logic/services/UserService";
 
 import Header from "../../components/Header";
@@ -28,7 +29,18 @@ export default function Dashboard() {
   }
 
   async function handleScan() {
-    // TODO
+    try {
+      const input: IScanInput = {
+        input: urlToScan,
+        userID: token.user.id,
+      };
+      await ScanService.getInstance().scan(input, token);
+      setUrlToScan("");
+      setShowModal(false);
+      await getScans();
+    } catch (error) {
+      console.log("Error scanning url");
+    }
   }
 
   useEffect(() => {
@@ -55,10 +67,10 @@ export default function Dashboard() {
           <table className="w-full border shadow-sm">
             <thead>
               <tr className="bg-blue-100 text-left">
-                <th className="p-2">URL</th>
-                <th className="p-2">Date</th>
-                <th className="p-2">Statut</th>
-                <th className="p-2">Accessible</th>
+                <th className="p-2 text-center">URL</th>
+                <th className="p-2 text-center">Date</th>
+                <th className="p-2 text-center">Statut</th>
+                <th className="p-2 text-center">Accessible</th>
               </tr>
             </thead>
             <tbody>
@@ -68,10 +80,14 @@ export default function Dashboard() {
                   <td className="p-2">
                     {new Date(scan.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="p-2">{scan.linkResult.statusCode}</td>
-                  <td className="p-2">
-                    {scan.linkResult.isAccessible ? "✅" : "❌"}
-                  </td>
+                  {scan.linkResult && (
+                    <>
+                      <td className="p-2">{scan.linkResult.statusCode}</td>
+                      <td className="p-2">
+                        {scan.linkResult.isAccessible ? "✅" : "❌"}
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>

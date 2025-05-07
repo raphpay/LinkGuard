@@ -9,6 +9,16 @@ export default interface IScan {
   linkResult: ILinkResult;
 }
 
+export interface IScanInput {
+  input: string;
+  userID: string;
+}
+
+export interface IScanInputWithoutAccount {
+  input: string;
+  email: string;
+}
+
 interface IUserID {
   id: string;
 }
