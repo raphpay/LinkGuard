@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import AuthenticationService from "../../../business-logic/services/AuthenticationService";
 
+import { setToken } from "../../../business-logic/redux/slices/tokenReducer";
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
 
@@ -9,10 +11,15 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const dispatch = useDispatch();
+
   async function login() {
     try {
-      await AuthenticationService.getInstance().login(email, password);
-      // TODO: Handle navigation to dashboard
+      const token = await AuthenticationService.getInstance().login(
+        email,
+        password
+      );
+      dispatch(setToken(token));
     } catch (error) {
       console.log("error logging in");
     }
