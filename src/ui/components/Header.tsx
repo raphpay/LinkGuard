@@ -9,7 +9,7 @@ interface HeaderProps {
   isLoggedIn?: boolean;
 }
 
-export default function Header({ isLoggedIn = false }) {
+export default function Header({ isLoggedIn = false }: HeaderProps) {
   const dispatch = useDispatch();
 
   function logout() {
