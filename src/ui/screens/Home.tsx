@@ -23,9 +23,7 @@ export default function Home() {
         input: url,
         email,
       };
-      console.log("1", input);
       const scan = await ScanService.getInstance().scanWithoutAccount(input);
-      console.log("2", scan);
 
       setSuccess(true);
       setMessage(

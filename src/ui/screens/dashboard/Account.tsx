@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+
 import ISubscriptionPlan from "../../../business-logic/models/ISubscriptionPlan";
 import IUser from "../../../business-logic/models/IUser";
 import NavigationRoutes from "../../../business-logic/navigation/NavigationRoutes";
+import { removeToken } from "../../../business-logic/redux/slices/tokenReducer";
+import { removeCurrentUser } from "../../../business-logic/redux/slices/userReducer";
+import CacheService from "../../../business-logic/services/CacheService";
 import SubscriptionPlanService from "../../../business-logic/services/SubscriptionPlanService";
 import UserService from "../../../business-logic/services/UserService";
 import { capitalizeFirstLetter } from "../../../business-logic/utils/string.utils";
+
 import Header from "../../components/Header";
 
 export default function Account() {
@@ -16,10 +21,17 @@ export default function Account() {
   const [plan, setPlan] = useState<ISubscriptionPlan | null>(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Sync methods
   function redirectToPricing() {
     navigate(NavigationRoutes.AUTH_PRICING);
+  }
+
+  function logout() {
+    dispatch(removeToken());
+    dispatch(removeCurrentUser());
+    CacheService.getInstance().clearStorage();
   }
 
   // Lifecycle
@@ -87,9 +99,7 @@ export default function Account() {
             </button>
             <button
               className="text-red-600 hover:underline text-center w-50 sm:mt-2"
-              onClick={() => {
-                /* logout logic */
-              }}
+              onClick={logout}
             >
               Se déconnecter
             </button>
