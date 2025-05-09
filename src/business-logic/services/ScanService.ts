@@ -1,4 +1,8 @@
-import IScan, { IScanInput, IScanInputWithoutAccount } from "../models/IScan";
+import IScan, {
+  IScanBulkInput,
+  IScanInput,
+  IScanInputWithoutAccount,
+} from "../models/IScan";
 import IToken from "../models/IToken";
 import APIService from "./APIService";
 
@@ -35,6 +39,14 @@ class ScanService {
         `${this.baseRoute}/scan-without-account`,
         input
       );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async scanBulk(input: IScanBulkInput): Promise<IScan[]> {
+    try {
+      return await APIService.post<IScan[]>(`${this.baseRoute}/bulk`, input);
     } catch (error) {
       throw error;
     }
