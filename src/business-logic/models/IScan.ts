@@ -19,6 +19,11 @@ export interface IScanInputWithoutAccount {
   email: string;
 }
 
+export interface IScanBulkInput {
+  urls: string[];
+  email: string;
+}
+
 interface IUserID {
   id: string;
 }
