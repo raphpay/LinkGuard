@@ -2,7 +2,11 @@ import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
 import IScan from "../models/IScan";
 import IToken from "../models/IToken";
-import IUser, { IUserInput, IUserUpdateInput } from "../models/IUser";
+import IUser, {
+  IUserChangePasswordRequestInput,
+  IUserInput,
+  IUserUpdateInput,
+} from "../models/IUser";
 import APIService from "./APIService";
 
 /**
@@ -87,6 +91,26 @@ class UserService {
       };
       await APIService.put(`${this.baseRoute}/${userID}`, input, token.value);
     } catch (error) {}
+  }
+
+  async changePassword(
+    currentPassword: string,
+    newPassword: string,
+    token: IToken
+  ): Promise<IToken> {
+    try {
+      const input: IUserChangePasswordRequestInput = {
+        currentPassword,
+        newPassword,
+      };
+      return await APIService.put(
+        `${this.baseRoute}/password`,
+        input,
+        token.value
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

@@ -23,3 +23,8 @@ export interface IUserUpdateInput {
   subscriptionStatus?: SubscriptionStatus;
   subscriptionPlanID?: string;
 }
+
+export interface IUserChangePasswordRequestInput {
+  currentPassword: string;
+  newPassword: string;
+}
