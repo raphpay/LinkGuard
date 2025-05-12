@@ -2,7 +2,11 @@ import Role from "../enums/Role";
 import SubscriptionStatus from "../enums/SubscriptionStatus";
 import IScan from "../models/IScan";
 import IToken from "../models/IToken";
-import IUser, { IUserInput, IUserUpdateInput } from "../models/IUser";
+import IUser, {
+  IUserChangePasswordRequestInput,
+  IUserInput,
+  IUserUpdateInput,
+} from "../models/IUser";
 import APIService from "./APIService";
 
 /**
@@ -28,9 +32,9 @@ class UserService {
     email: string,
     password: string,
     planID: string
-  ): Promise<IToken> {
+  ): Promise<IUser> {
     try {
-      const user: IUserInput = {
+      const input: IUserInput = {
         email,
         password,
         subscriptionStatus: SubscriptionStatus.free,
@@ -40,13 +44,13 @@ class UserService {
       const encodedAuth = btoa(`${email}:${password}`); // Use btoa()
       const basicAuth = `Basic ${encodedAuth}`;
 
-      const token = await APIService.post<IToken>(
+      const newUser = await APIService.post<IUser>(
         `${this.baseRoute}/register`,
-        user,
+        input,
         undefined,
         basicAuth
       );
-      return token;
+      return newUser;
     } catch (error: any) {
       throw error;
     }
@@ -87,6 +91,26 @@ class UserService {
       };
       await APIService.put(`${this.baseRoute}/${userID}`, input, token.value);
     } catch (error) {}
+  }
+
+  async changePassword(
+    currentPassword: string,
+    newPassword: string,
+    token: IToken
+  ): Promise<IToken> {
+    try {
+      const input: IUserChangePasswordRequestInput = {
+        currentPassword,
+        newPassword,
+      };
+      return await APIService.put(
+        `${this.baseRoute}/password`,
+        input,
+        token.value
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
