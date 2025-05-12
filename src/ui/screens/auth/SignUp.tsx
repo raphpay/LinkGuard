@@ -5,6 +5,7 @@ import UserService from "../../../business-logic/services/UserService";
 
 import Screen from "../../../business-logic/enums/Screen";
 import { setToken } from "../../../business-logic/redux/slices/tokenReducer";
+import AuthenticationService from "../../../business-logic/services/AuthenticationService";
 import Header from "../../components/Header";
 import PasswordInput from "../../components/PasswordInput";
 import PricinSection from "../../components/PricingSection";
@@ -44,7 +45,7 @@ export default function SignUp() {
     if (selectedPlan) {
       if (password === passwordConfirmation) {
         try {
-          const token = await UserService.getInstance().register(
+          const newUser = await UserService.getInstance().register(
             email,
             password,
             selectedPlan.id
@@ -52,6 +53,11 @@ export default function SignUp() {
           setEmail("");
           setPassword("");
           setPasswordConfirmation("");
+
+          const token = await AuthenticationService.getInstance().login(
+            email,
+            password
+          );
           dispatch(setToken(token));
         } catch (error) {
           console.log("error signing up");

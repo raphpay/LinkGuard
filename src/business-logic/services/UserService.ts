@@ -32,9 +32,9 @@ class UserService {
     email: string,
     password: string,
     planID: string
-  ): Promise<IToken> {
+  ): Promise<IUser> {
     try {
-      const user: IUserInput = {
+      const input: IUserInput = {
         email,
         password,
         subscriptionStatus: SubscriptionStatus.free,
@@ -44,13 +44,13 @@ class UserService {
       const encodedAuth = btoa(`${email}:${password}`); // Use btoa()
       const basicAuth = `Basic ${encodedAuth}`;
 
-      const token = await APIService.post<IToken>(
+      const newUser = await APIService.post<IUser>(
         `${this.baseRoute}/register`,
-        user,
+        input,
         undefined,
         basicAuth
       );
-      return token;
+      return newUser;
     } catch (error: any) {
       throw error;
     }
