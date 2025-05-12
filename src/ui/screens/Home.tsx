@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import ScanMode from "../../business-logic/enums/ScanMode";
 import IScan, {
-  IScanBulkInput,
+  IScanBulkInputWithoutAccount,
   IScanInputWithoutAccount,
 } from "../../business-logic/models/IScan";
 import ScanService from "../../business-logic/services/ScanService";
@@ -40,8 +40,13 @@ export default function Home() {
         setSuccess(true);
         setScanResults([scan]);
       } else {
-        const input: IScanBulkInput = { urls: extractedUrls, email };
-        const scans = await ScanService.getInstance().scanBulk(input);
+        const input: IScanBulkInputWithoutAccount = {
+          urls: extractedUrls,
+          email,
+        };
+        const scans = await ScanService.getInstance().scanBulkWithoutAccount(
+          input
+        );
         setSuccess(true);
         setScanResults(scans);
       }
