@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { Mail, Rss } from "lucide-react";
 
 interface HomeNewsletterFormProps {
   newsletterContent: string;
@@ -65,6 +65,9 @@ export default function HomeNewsletterForm({
 
   return (
     <>
+      <div className="flex justify-center">
+        <Rss className="text-blue-500" size={18} />
+      </div>
       <textarea
         rows={6}
         placeholder="Collez ici le contenu HTML ou texte de votre newsletter..."
